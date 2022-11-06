@@ -1,28 +1,10 @@
 from PIL import Image
+from utils import *
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 
-def get_bit(readByte: int, n: int) -> int:
-    return int((readByte & (1 << n)) / (1 << n))
-
-def get_bits(readByte: int) -> list[int]:
-    bits = []
-    for i in range(8)[::-1]:
-        bits += [get_bit(readByte, i)]
-
-    return bits
-
-def bits_to_int(bits: list[int]) -> int:
-    return sum([bit << i for i, bit in enumerate(bits[::-1])])
-
-def bits_to_char(bits: list[int]) -> str | None:
-    if sum(bits) == 0:
-        return None
-
-    return chr(bits_to_int(bits))
-
 def read_bit(pixel_color: int) -> None:
-    return get_bits(pixel_color)[-1]
+    return get_bits_from_byte(pixel_color)[-1]
 
 def unhidder():
 
@@ -46,8 +28,12 @@ def unhidder():
             if not keepReading:
                 break
 
+            redPixel = imagePixels[x, y][0]
+            greenPixel = imagePixels[x, y][1]
+            bluePixel = imagePixels[x, y][2]
+
             if keepReading:
-                readByte += [read_bit(imagePixels[x, y][0])]
+                readByte += [read_bit(redPixel)]
                 if len(readByte) == 8:
                     char = bits_to_char(readByte)
 
@@ -59,7 +45,7 @@ def unhidder():
                     readByte = []
 
             if keepReading:
-                readByte += [read_bit(imagePixels[x, y][1])]
+                readByte += [read_bit(greenPixel)]
 
                 if len(readByte) == 8:
                     char = bits_to_char(readByte)
@@ -72,7 +58,7 @@ def unhidder():
                     readByte = []
 
             if keepReading:
-                readByte += [read_bit(imagePixels[x, y][2])]
+                readByte += [read_bit(bluePixel)]
 
                 if len(readByte) == 8:
                     char = bits_to_char(readByte)

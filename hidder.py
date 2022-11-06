@@ -1,4 +1,5 @@
 import os
+from utils import *
 from PIL import Image
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
@@ -6,24 +7,8 @@ import pathlib
 
 ASCII = 'ascii'
 
-def get_bit(byte: int, n: int) -> int:
-    return int((byte & (1 << n)) / (1 << n))
-
-def get_bits(byte: int) -> list[int]:
-    bits = []
-    for i in range(8)[::-1]:
-        bits += [get_bit(byte, i)]
-
-    return bits
-
-def bits_to_int(bits: list[int]) -> int:
-    return sum([bit << i for i, bit in enumerate(bits[::-1])])
-
-def keep_writing(writed: int, bits: list[int]) -> bool:
-    return writed < len(bits)
-
 def alter_last_bit(original: int, replace_bit: int) -> int:
-    pixel_color = get_bits(original)
+    pixel_color = get_bits_from_byte(original)
     pixel_color[-1] = replace_bit
     return bits_to_int(pixel_color)
 
@@ -38,6 +23,8 @@ def hidder():
     if(textFileSize * 8 >= imageFileSize):
         print("El texto es demaciado grande para la imagen")
         exit()
+
+    print("Ocultando el mensaje...")
     
     imageFile = Image.open(str(imageFilePath))
     textFile = open(str(textFilePath), encoding = ASCII).read()
@@ -47,7 +34,7 @@ def hidder():
     imageWidth, imageHeight = imageFile.size
 
     for b in bytes(textFile, ASCII):
-        textFileBits += get_bits(b)
+        textFileBits += get_bits_from_byte(b)
     textFileBits += [0, 0, 0, 0, 0, 0, 0, 0]
 
     writed = 0
@@ -60,26 +47,27 @@ def hidder():
             if not keep_writing(writed, textFileBits):
                 break
 
-            red = imagePixels[x, y][0]
+            redPixel = imagePixels[x, y][0]
             if keep_writing(writed, textFileBits):
-                red = alter_last_bit(red, textFileBits[writed])
+                redPixel = alter_last_bit(redPixel, textFileBits[writed])
                 writed += 1
 
-            green = imagePixels[x, y][1]
+            greenPixel = imagePixels[x, y][1]
             if keep_writing(writed, textFileBits):
-                green = alter_last_bit(green, textFileBits[writed])
+                greenPixel = alter_last_bit(greenPixel, textFileBits[writed])
                 writed += 1
 
-            blue = imagePixels[x, y][2]
+            bluePixel = imagePixels[x, y][2]
             if keep_writing(writed, textFileBits):
-                blue = alter_last_bit(blue, textFileBits[writed])
+                bluePixel = alter_last_bit(bluePixel, textFileBits[writed])
                 writed += 1
 
-            imagePixels[x, y] = (red, green, blue)
+            imagePixels[x, y] = (redPixel, greenPixel, bluePixel)
 
 
     path = pathlib.PurePath(imageFilePath)
     imageFile.save(str(path.parents[0]) + '/modified_image.png')
+    print("El mensaje se ha ocultado correctamente!")
 
 
 hidder()
