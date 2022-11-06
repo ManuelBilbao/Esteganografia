@@ -21,7 +21,7 @@ def hidder():
     Tk().withdraw()
 
     if(textFileSize * 8 >= imageFileSize):
-        print("El texto es demaciado grande para la imagen")
+        print("El texto es demasiado grande para la imagen")
         exit()
 
     print("Ocultando el mensaje...")
