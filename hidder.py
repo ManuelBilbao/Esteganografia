@@ -20,18 +20,19 @@ def hidder():
     imageFileSize = os.path.getsize(imageFilePath)
     Tk().withdraw()
 
-    if(textFileSize * 8 >= imageFileSize):
+    imageFile = Image.open(str(imageFilePath))
+    imageWidth, imageHeight = imageFile.size
+
+    if(textFileSize >= imageWidth * imageHeight * 3 / 8):
         print("El texto es demasiado grande para la imagen")
         exit()
 
     print("Ocultando el mensaje...")
     
-    imageFile = Image.open(str(imageFilePath))
     textFile = open(str(textFilePath), encoding = ASCII).read()
 
     textFileBits = []
     imagePixels = imageFile.load()
-    imageWidth, imageHeight = imageFile.size
 
     for b in bytes(textFile, ASCII):
         textFileBits += get_bits_from_byte(b)
