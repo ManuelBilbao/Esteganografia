@@ -1,9 +1,10 @@
+#!/bin/env python
+
 import os
 from utils import *
 from PIL import Image
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
-import pathlib
 
 ASCII = 'ascii'
 
@@ -17,7 +18,6 @@ def hidder():
     textFileSize = os.path.getsize(textFilePath)
 
     imageFilePath = askopenfilename()
-    imageFileSize = os.path.getsize(imageFilePath)
     Tk().withdraw()
 
     imageFile = Image.open(str(imageFilePath))
@@ -63,12 +63,16 @@ def hidder():
                 bluePixel = alter_last_bit(bluePixel, textFileBits[writed])
                 writed += 1
 
-            imagePixels[x, y] = (redPixel, greenPixel, bluePixel)
+            try:
+                imagePixels[x, y] = (
+                    redPixel, greenPixel, bluePixel, imagePixels[x, y][3]
+                )
+            except Exception:
+                imagePixels[x, y] = (redPixel, greenPixel, bluePixel)
 
-
-    path = pathlib.PurePath(imageFilePath)
-    imageFile.save(str(path.parents[0]) + '/modified_image.png')
+    imageFile.save('./modified_image.' + imageFilePath.split(".")[-1])
     print("El mensaje se ha ocultado correctamente!")
 
 
-hidder()
+if __name__ == "__main__":
+    hidder()

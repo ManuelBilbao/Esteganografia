@@ -1,3 +1,5 @@
+#!/bin/env python
+
 from PIL import Image
 from utils import *
 from tkinter import Tk
@@ -72,4 +74,5 @@ def unhidder():
     print(message)
 
 
-unhidder()
+if __name__ == "__main__":
+    unhidder()
