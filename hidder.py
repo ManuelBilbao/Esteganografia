@@ -1,10 +1,9 @@
-#!/bin/env python
-
 import os
 from utils import *
 from PIL import Image
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+from aes import *
 
 ASCII = 'ascii'
 
@@ -21,20 +20,24 @@ def hidder():
     Tk().withdraw()
 
     imageFile = Image.open(str(imageFilePath))
-    imageWidth, imageHeight = imageFile.size
+    imageWidth, imageHeight = imageFile.size 
+
+    key = generate_key()
 
     if(textFileSize >= imageWidth * imageHeight * 3 / 8):
         print("El texto es demasiado grande para la imagen")
         exit()
 
     print("Ocultando el mensaje...")
-    
+
     textFile = open(str(textFilePath), encoding = ASCII).read()
+
+    encryptedTextFile = encrypter(key, textFile)
 
     textFileBits = []
     imagePixels = imageFile.load()
 
-    for b in bytes(textFile, ASCII):
+    for b in bytes(encryptedTextFile.decode(), ASCII):
         textFileBits += get_bits_from_byte(b)
     textFileBits += [0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -71,8 +74,8 @@ def hidder():
                 imagePixels[x, y] = (redPixel, greenPixel, bluePixel)
 
     imageFile.save('./modified_image.' + imageFilePath.split(".")[-1])
+   
     print("El mensaje se ha ocultado correctamente!")
-
 
 if __name__ == "__main__":
     hidder()

@@ -1,5 +1,4 @@
-#!/bin/env python
-
+from aes import *
 from PIL import Image
 from utils import *
 from tkinter import Tk
@@ -16,12 +15,15 @@ def unhidder():
     imageFile = Image.open(str(filename))
     imagePixels = imageFile.load()
 
+    keyPath = askopenfilename()
+
+    key = upload_key(keyPath)
+
     imageWidth, imageHeight = imageFile.size
 
     keepReading = True
     readByte = []
     message = ""
-
     for x in range(imageWidth):
         if not keepReading:
             break
@@ -71,7 +73,8 @@ def unhidder():
 
                     message += char
                     readByte = []
-    print(message)
+
+    print(decrypter(key, message))
 
 
 if __name__ == "__main__":
