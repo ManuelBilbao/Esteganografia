@@ -9,13 +9,13 @@ def read_bit(pixel_color: int) -> None:
     return get_bits_from_byte(pixel_color)[-1]
 
 def unhidder():
-
+    print("Seleccione la imagen")
     filename = askopenfilename()
     Tk().withdraw() 
 
     imageFile = Image.open(str(filename))
     imagePixels = imageFile.load()
-
+    print("Seleccione la key")
     keyPath = askopenfilename()
 
     key = upload_key(keyPath)

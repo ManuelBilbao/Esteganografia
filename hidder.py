@@ -14,9 +14,11 @@ def alter_last_bit(original: int, replace_bit: int) -> int:
     return bits_to_int(pixel_color)
 
 def hidder():
+    print("Seleccione el texto")
     textFilePath = askopenfilename()
     textFileSize = os.path.getsize(textFilePath)
-
+    
+    print("Seleccione la imagen")
     imageFilePath = askopenfilename()
     Tk().withdraw()
 
