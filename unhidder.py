@@ -3,6 +3,7 @@ from PIL import Image
 from utils import *
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+import time
 
 def read_bit(pixel_color: int) -> None:
     return get_bits_from_byte(pixel_color)[-1]
@@ -24,6 +25,9 @@ def unhidder():
     keepReading = True
     readByte = []
     message = ""
+
+    print('Obteniendo mensaje...')
+
     for x in range(imageWidth):
         if not keepReading:
             break
@@ -74,6 +78,8 @@ def unhidder():
                     message += char
                     readByte = []
 
+    print("Desencriptando mensaje...")
+    time.sleep(2)
     print(decrypter(key, message))
 
 

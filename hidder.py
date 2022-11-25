@@ -3,6 +3,7 @@ from utils import *
 from PIL import Image
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+import time
 from aes import *
 
 ASCII = 'ascii'
@@ -28,11 +29,13 @@ def hidder():
         print("El texto es demasiado grande para la imagen")
         exit()
 
-    print("Ocultando el mensaje...")
 
     textFile = open(str(textFilePath), encoding = ASCII).read()
-
+    print('Encriptando mensaje y generando key...')
     encryptedTextFile = encrypter(key, textFile)
+    print('Mensaje encriptado!')
+    time.sleep(1)
+    print("Ocultando el mensaje...")
 
     textFileBits = []
     imagePixels = imageFile.load()
