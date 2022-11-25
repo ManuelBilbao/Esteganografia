@@ -1,26 +1,32 @@
-#!/bin/env python
-
+from aes import *
 from PIL import Image
 from utils import *
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+import time
 
 def read_bit(pixel_color: int) -> None:
     return get_bits_from_byte(pixel_color)[-1]
 
 def unhidder():
-
+    print("Seleccione la imagen")
     filename = askopenfilename()
     Tk().withdraw() 
 
     imageFile = Image.open(str(filename))
     imagePixels = imageFile.load()
+    print("Seleccione la key")
+    keyPath = askopenfilename()
+
+    key = upload_key(keyPath)
 
     imageWidth, imageHeight = imageFile.size
 
     keepReading = True
     readByte = []
     message = ""
+
+    print('Obteniendo mensaje...')
 
     for x in range(imageWidth):
         if not keepReading:
@@ -71,7 +77,10 @@ def unhidder():
 
                     message += char
                     readByte = []
-    print(message)
+
+    print("Desencriptando mensaje...")
+    time.sleep(2)
+    print(decrypter(key, message))
 
 
 if __name__ == "__main__":
